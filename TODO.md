@@ -1,5 +1,6 @@
 # Thesis: TODO
 
+- [] Configre Github action for commit messages
 - [] Configure git
 - [] Install and configure zsh
 - [] Install and configure neovim
