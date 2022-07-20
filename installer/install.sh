@@ -1,9 +1,6 @@
 #!/bin/bash
 # This script installs Thesis.
 
-# GLOBALS
-PACKAGE_MANAGER="NONE"
-
 # DETERMINE SYSTEM'S PACKAGE MANAGER.
 
 # Declare a system -> package manager associative array.
@@ -12,6 +9,8 @@ declare -A PM_LOOKUP=(
 )
 
 # Determine package manager.
+PACKAGE_MANAGER="NONE"
+
 for file in ${!PM_LOOKUP[@]};
 do
     echo "[*] Thesis is determining system's package manager"
