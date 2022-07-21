@@ -5,7 +5,7 @@
 
 # Declare a system -> package manager associative array.
 declare -A PM_LOOKUP=(
-    [/etc/debian_version]="apt"
+    [/etc/debian_version]=apt
 )
 
 # Determine package manager.
@@ -26,9 +26,31 @@ if [ $PACKAGE_MANAGER = "NONE" ]; then
     echo "[-] Thesis cannot determine the systems package manager"
     echo "[*] Thesis is aborting installation ..."
     exit 1
+fi
 
 # INSTALL PACKAGES
+PACKAGES=(
+    git         # Version control system.
+    zsh         # Shell alternative.
+    neovim      # Text editor.
+    tmux        # Terminal multiplexer.
+    stow        # Symlink farm
+    bat         # A better cat command.
+    fzf         # Fuzzy finder.
+)
 
+echo "[*] Thesis is installing ${#PACKAGES[@]} packages"
+
+# Associatice array for package manager installation commands.
+declare -A PMIC=(
+    [apt]="apt install"]
+)
+
+# Install packages.
+for package in $PACKAGES;
+do
+    eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
+done
 
 
 # STOW SYMLINKS
