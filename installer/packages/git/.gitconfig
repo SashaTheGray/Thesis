@@ -1,0 +1,57 @@
+# This file contains git configurations.
+
+[color]
+
+    # Enable terminal color support.
+    ui = auto
+
+[alias]
+
+    # Compact git status.
+    st = status -sb
+
+    # Checkout.
+    co = checkout
+
+    # Create and checkout a new branch.
+    birth = checkout -b
+
+    # Delete a branch.
+    kill = branch -D
+    
+    # List all branches.
+    br = branch --format="%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]" --sort=-committerdate
+    
+    # Custom git log.
+	lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %C(yellow italic)%s%Creset %C(dim green) %cr %C(brightcyan bold)%an\" --abbrev-commit
+
+    # Commit.
+    ci = "commit"
+
+    # Commit with a short subject message.
+    cim = "commit -m"
+
+    # Amend last commit.
+    oops = commit --amend
+
+    # Save all unstaged changes to the staging area.
+    save = !git add -A && git commit -m "chore: commit save point"
+
+    # Undo last commit.
+    undo = reset HEAD~1 --mixed
+    
+    # Reset all staged changes.
+    nuke = !git reset --hard
+
+[user]
+	name = SashaTheGray
+	email = contact-sasha@proton.me
+[pull]
+
+    # Use rebase instead of merge when pulling.
+	rebase = true
+[core]
+	editor = vim
+	excludesfile = /home/sasha/.gitignore_global
+[commit]
+	template = /home/sasha/.gitmessage.txt

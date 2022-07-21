@@ -1,0 +1,20 @@
+# Be so kind and conform to the commit message format.
+# Find a detailed format desciption in REPOSITORY/.github/commit_format.md.
+#
+# Subject line.
+# An imperative summary, capitalized paragraph, don't end with a dot.
+# Format: "<type>(<scope>): <subject-line>" - type and scope are lowercase.
+# Example: "docs(todo): Add new items to-do".
+# Line length should be 50 or fewer characters.
+#
+# Add a single blank line between subject and body.
+#
+# Body section (optional IF commit is minor).
+# Body: Explain "what" and "why", not "how".
+# Line length should be 72 or fewer characters.
+#
+# Add a single blank line between body and footer.
+#
+# Footer section (optional): either "CLOSES" or "RESOLVES".
+# Example: "CLOSES: Issue #13".
+# Example: "RESOLVES": Issue #13".

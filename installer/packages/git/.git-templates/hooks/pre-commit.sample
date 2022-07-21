@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# This pre-commit hook checks for illegal tokens.
+# Illegal tokens are task identifiers.
+
+ENTRY_MESSAGE="-- Running git pre-commit hook -- \n"
+EXIT_MESSAGE="\n-- Hook ran successfully --"
+TOKENS=(TODO FIX REFACTOR)
+LAST_FILE_ANALYZED="123.$%^"
+COUNT=0
+
+echo -e $ENTRY_MESSAGE
+
+# Abort hook if there are no illegal tokens registered.
+if [ -z $TOKENS ]; then
+    echo "[*] No illegal tokens registered with hook"
+    echo "[*] Committing changes ..."
+    echo -e $EXIT_MESSAGE
+    exit 1
+fi
+
+# Get the name of all new and/or modified files.
+STAGED_FILES=`git --no-pager diff --name-only --cached --diff-filter=AM`
+
+# Analyze file ($1), look if it contains tokens ($2).
+analyze_file () {
+
+    # Parse function parameters.
+    local file=$1
+    local token=$2
+
+    # Search for all new lines in staged files that contain $token. 
+    IFS=$'\n' read -r -d "" -a token_lines < <(git diff --cached --unified=0 $file | grep "^[+-]" | grep -Ev "(--- a/|+\+\+ b/)" | grep -i $token && printf "\0")
+    
+    # Return if no lines were found. 
+    if [ ${#token_lines} -eq 0 ]; then
+        return
+    fi
+    
+    if [ $LAST_FILE_ANALYZED != $file ];then
+        echo -e "\n[-] $file"
+        LAST_FILE_ANALYZED=$file 
+    fi
+
+    for line in "${token_lines[@]}"; do
+        COUNT=$((COUNT+1))
+        
+        # Remove leading token.
+        if [ ${line:0:1} = "+" ] || [ ${line:0:1} = "-" ]; 
+        then
+            processed_line=${line:1}
+        else
+            processed_line=$line
+        fi
+
+        echo -e "\t- $processed_line"
+    done 
+}
+
+echo -e "[*] Searching for uncompleted tasks:"
+echo -e "\t${TOKENS[@]}"
+
+# Search through staged files.
+for file in $STAGED_FILES; do
+    for token in ${TOKENS[@]}; do 
+	    analyze_file $file $token
+    done
+done
+
+if [ $COUNT -ne 0 ]; 
+then
+    echo -e "\n[!] Number of unresolved tasks: $COUNT"
+    echo "[?] Please resolve or cancel these tasks before committing"
+else
+    echo "[+] File analyzis completed, committing changes ..."
+fi
+
+echo -e $EXIT_MESSAGE
+
+if [ $COUNT -ne 0 ];
+then
+    exit 1
+else
+    echo ""
+    exit 0
+fi
