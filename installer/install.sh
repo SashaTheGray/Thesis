@@ -5,7 +5,7 @@
 
 # Declare a system -> package manager associative array.
 declare -A PM_LOOKUP=(
-    [/etc/debian_version]=apt
+    [/etc/debian_version]="apt"
 )
 
 # Determine package manager.
@@ -34,29 +34,32 @@ PACKAGES=(
     zsh         # Shell alternative.
     neovim      # Text editor.
     tmux        # Terminal multiplexer.
-    stow        # Symlink farm
+    stow        # Symlink farm.
     bat         # A better cat command.
     fzf         # Fuzzy finder.
 )
 
-echo "[*] Thesis is installing ${#PACKAGES[@]} packages"
+echo "[*] Thesis is installing ${#PACKAGES[@]} packages ..."
 
 # Associatice array for package manager installation commands.
 declare -A PMIC=(
-    [apt]="apt install"]
+    [apt]="apt-get -y install"
 )
 
 # Install packages.
-for package in $PACKAGES;
+for package in ${PACKAGES[@]};
 do
+    echo "[*] Thesis is installing $package"
     eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
 done
+
+echo "[+] Thesis finished installing packages"
 
 
 # STOW SYMLINKS
 
 # ZSH SETUP.
-if ["$SHELL" != "$(which zsh)"]; then
+if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     
     # Get path of the zsh executable.
     zsh_path=$(which zsh)
