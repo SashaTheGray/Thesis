@@ -37,6 +37,10 @@ PACKAGES=(
     stow        # Symlink farm.
     bat         # A better cat command.
     fzf         # Fuzzy finder.
+    unzip	    # Extraction tool.
+    npm         # Node package manager.
+    black       # Python formatter.
+    flake8      # Python analysis tool.
 )
 
 echo "[*] Thesis is installing ${#PACKAGES[@]} packages ..."
@@ -52,6 +56,13 @@ do
     echo "[*] Thesis is installing $package"
     eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
 done
+
+echo "[*] Thesis is installing npm packages"
+
+echo "[*] Thesis is installing prettier"
+npm install -g prettier
+
+echo
 
 echo "[+] Thesis finished installing packages"
 
