@@ -66,6 +66,9 @@ pip install black
 echo "[*] Thesis is installing flake8"
 pip install flake8
 
+echo "[*] Thesis is installing beautysh"
+pip install beautysh
+
 # Npm.
 echo "[*] Thesis is installing npm packages"
 echo "[*] Thesis is installing prettier"
