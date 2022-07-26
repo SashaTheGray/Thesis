@@ -39,6 +39,7 @@ PACKAGES=(
     fzf         # Fuzzy finder.
     unzip	    # Extraction tool.
     npm         # Node package manager.
+    cargo       # Rust package manager.
     black       # Python formatter.
     flake8      # Python analysis tool.
 )
@@ -57,10 +58,18 @@ do
     eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
 done
 
-echo "[*] Thesis is installing npm packages"
+# Pip.
 
+
+# Npm.
+echo "[*] Thesis is installing npm packages"
 echo "[*] Thesis is installing prettier"
 npm install -g prettier
+
+# Cargo.
+echo "[*] Thesis is installing cargo packages"
+echo "[*] Thesis is installing stylua"
+cargo install stylua
 
 echo
 
