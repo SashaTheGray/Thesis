@@ -59,7 +59,12 @@ do
 done
 
 # Pip.
+echo "[*] Thesis is installing pip packages"
+echo "[*] Thesis is installing black"
+pip install black
 
+echo "[*] Thesis is installing flake8"
+pip install flake8
 
 # Npm.
 echo "[*] Thesis is installing npm packages"
