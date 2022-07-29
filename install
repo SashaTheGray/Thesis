@@ -60,8 +60,6 @@ PACKAGES=(
     unzip	    # Extraction tool.
     npm         # Node package manager.
     cargo       # Rust package manager.
-    black       # Python formatter.
-    flake8      # Python analysis tool.
 )
 
 echo "[*] Thesis is installing ${#PACKAGES[@]} packages ..."
