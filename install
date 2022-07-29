@@ -16,6 +16,49 @@
 #   IV.     Setup zsh                               #
 # -----------------------###----------------------- #
 
+# Echo colored messages based on message type.
+notify ()
+{
+    # Parse arguments.
+    local type=$1
+    local message=$2
+
+    # Colours.
+    local blue="\033[0;34m"
+    local green="\033[0;34m"
+    local red="\033[0;34m"
+    local no_color="\033[0m"
+    
+    # Config.
+    local colour="NONE"
+    local sign="NONE"
+    
+    # Deduce color and sign for the notification.
+    case "$type" in
+        "operation") 
+            colour=$blue
+            sign="[*] "
+        ;;
+        "success") 
+            colour=$green
+            sign="[+] "
+        ;;
+        "failure") 
+            colour=$red
+            sign="[-] "
+        ;;
+        *) 
+            colour=$no_color
+            sign=""
+        ;;
+    esac
+    
+    # Echo notification.
+    echo -e "$colour$sign$message$no_color"
+    
+}
+echo "--- THESIS ---"
+
 # ------------------------------------- #
 # I. DETERMINE SYSTEM'S PACKAGE MANAGER #
 # ------------------------------------- #
@@ -152,3 +195,4 @@ if [ "$SHELL" != "/usr/bin/zsh" ] ; then
 fi
 
 echo "[*] Thesis finished configuring ZSH"
+echo "--- THESIS ---"
