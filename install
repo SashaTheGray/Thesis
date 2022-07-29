@@ -52,7 +52,6 @@ fi
 PACKAGES=(
     git         # Version control system.
     zsh         # Shell alternative.
-    neovim      # Text editor.
     tmux        # Terminal multiplexer.
     stow        # Symlink farm.
     bat         # A better cat command.
