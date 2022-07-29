@@ -73,7 +73,7 @@ declare -A PMIC=(
 for package in ${PACKAGES[@]};
 do
     echo "[*] Thesis is installing $package"
-    eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
+    eval "${PMIC[$PACKAGE_MANAGER]} $package" &> /dev/null
 done
 
 # install pip packages.
@@ -87,7 +87,7 @@ echo "[*] Thesis is installing ${#PIP_PACKAGES[@]} pip packages ..."
 for package in ${PIP_PACKAGES[@]};
 do
     echo "[*] Thesis is installing $package"
-    pip3 install $package > /dev/null
+    pip3 install $package &> /dev/null
 done
 
 # Install npm packages.
@@ -99,7 +99,7 @@ echo "[*] Thesis is installing ${#NPM_PACKAGES[@]} npm packages"
 for package in ${NPM_PACKAGES[@]};
 do
     echo "[*] Thesis is installing $package"
-    npm install -g $package > /dev/null
+    npm install -g $package &> /dev/null
 done
 
 # Install cargo packages.
@@ -107,12 +107,13 @@ CARGO_PACKAGES=(
     stylua
 )
 echo "[*] Thesis is installing ${#CARGO_PACKAGES[@]} cargo packages"
-for package in $CARGO_PACKAGES[@];
+for package in ${CARGO_PACKAGES[@]};
 do
     echo "[*] Thesis is installing $package"
-    cargo install $package > /dev/null
+    cargo install $package &> /dev/null
 done
 
+# Install neovim.
 echo "[*] Thesis is installing neovim"
 
 # Set the appimage source and destination.
@@ -122,11 +123,8 @@ IMAGE_NAME=nvim
 IMAGE=$IMAGE_DESTINATION/$IMAGE_NAME
 
 # Download image and make it executeable.
-curl -L $NEOVIM_SOURCE > $IMAGE
-chmod u+x $IMAGE
-
-# Display neovim version.
-nvim --version | head -n 1
+curl -s -L $NEOVIM_SOURCE > $IMAGE
+chmod u+x $IMAGE > /dev/null
 
 echo "[*] Thesis installed neovim"
 echo "[+] Thesis finished installing packages"
