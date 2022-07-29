@@ -102,10 +102,16 @@ do
     npm install -g $package > /dev/null
 done
 
-# Cargo.
-echo "[*] Thesis is installing cargo packages"
-echo "[*] Thesis is installing stylua"
-cargo install stylua
+# Install cargo packages.
+CARGO_PACKAGES=(
+    stylua
+)
+echo "[*] Thesis is installing ${#CARGO_PACKAGES[@]} cargo packages"
+for package in $CARGO_PACKAGES[@];
+do
+    echo "[*] Thesis is installing $package"
+    cargo install $package > /dev/null
+done
 
 echo "[*] Thesis is installing neovim"
 
@@ -120,7 +126,7 @@ curl -L $NEOVIM_SOURCE > $IMAGE
 chmod u+x $IMAGE
 
 # Display neovim version.
-nvim --version | grep NVIM
+nvim --version | head -n 1
 
 echo "[*] Thesis installed neovim"
 echo "[+] Thesis finished installing packages"
