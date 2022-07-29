@@ -57,6 +57,7 @@ PACKAGES=(
     bat         # A better cat command.
     fzf         # Fuzzy finder.
     unzip	    # Extraction tool.
+    nodejs      # Javascript runtime.
     npm         # Node package manager.
     cargo       # Rust package manager.
 )
@@ -75,16 +76,19 @@ do
     eval "${PMIC[$PACKAGE_MANAGER]} $package" > /dev/null
 done
 
-# Pip.
-echo "[*] Thesis is installing pip packages"
-echo "[*] Thesis is installing black"
-pip install black
+# install pip packages.
+PIP_PACKAGES=(
+    black       # Python code formatter.
+    flake8      # Python code linter.
+    beautysh    # Bash code formatter.
+)
 
-echo "[*] Thesis is installing flake8"
-pip install flake8
-
-echo "[*] Thesis is installing beautysh"
-pip install beautysh
+echo "[*] Thesis is installing ${#PIP_PACKAGES[@]} pip packages ..."
+for package in ${PIP_PACKAGES[@]};
+do
+    echo "[*] Thesis is installing $package"
+    pip3 install $package > /dev/null
+done
 
 # Npm.
 echo "[*] Thesis is installing npm packages"
@@ -109,7 +113,7 @@ curl -L $NEOVIM_SOURCE > $IMAGE
 chmod u+x $IMAGE
 
 # Display neovim version.
-nvim --version
+nvim --version | grep NVIM
 
 echo "[*] Thesis installed neovim"
 echo "[+] Thesis finished installing packages"
@@ -121,6 +125,8 @@ echo "[+] Thesis finished installing packages"
 # ------------- #
 # IV. SETUP ZSH #
 # ------------- #
+
+echo "[*] Thesis is setting up ZSH"
 
 if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     
@@ -134,3 +140,4 @@ if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     export SHELL=$zsh_path
 fi
 
+echo "[*] Thesis finished configuring ZSH"
