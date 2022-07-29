@@ -65,7 +65,7 @@ echo "[*] Thesis is installing ${#PACKAGES[@]} packages ..."
 
 # Associatice array for package manager installation commands.
 declare -A PMIC=(
-    [apt]="apt-get -y install"
+    [apt]="sudo apt-get -y install"
 )
 
 # Install packages.
