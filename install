@@ -90,10 +90,17 @@ do
     pip3 install $package > /dev/null
 done
 
-# Npm.
-echo "[*] Thesis is installing npm packages"
-echo "[*] Thesis is installing prettier"
-npm install -g prettier
+# Install npm packages.
+NPM_PACKAGES=(
+    prettier
+)
+echo "[*] Thesis is installing ${#NPM_PACKAGES[@]} npm packages"
+
+for package in ${NPM_PACKAGES[@]};
+do
+    echo "[*] Thesis is installing $package"
+    npm install -g $package > /dev/null
+done
 
 # Cargo.
 echo "[*] Thesis is installing cargo packages"
