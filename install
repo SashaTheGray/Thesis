@@ -96,6 +96,22 @@ echo "[*] Thesis is installing cargo packages"
 echo "[*] Thesis is installing stylua"
 cargo install stylua
 
+echo "[*] Thesis is installing neovim"
+
+# Set the appimage source and destination.
+NEOVIM_SOURCE="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
+IMAGE_DESTINATION=$HOME/.local/bin
+IMAGE_NAME=nvim
+IMAGE=$IMAGE_DESTINATION/$IMAGE_NAME
+
+# Download image and make it executeable.
+curl -L $NEOVIM_SOURCE > $IMAGE
+chmod u+x $IMAGE
+
+# Display neovim version.
+nvim --version
+
+echo "[*] Thesis installed neovim"
 echo "[+] Thesis finished installing packages"
 
 # ------------------ #
@@ -117,5 +133,4 @@ if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     # Explictly set the current shell as zsh.
     export SHELL=$zsh_path
 fi
-
 
