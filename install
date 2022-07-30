@@ -17,9 +17,9 @@
 #   IV.     Setup zsh                               #
 # -----------------------###----------------------- #
 
-# ---------- #
-# ~FUNCTIONS #
-# ---------- #
+# ------------ #
+# ~. FUNCTIONS #
+# ------------ #
 
 ###################################################
 # Echo signed and colored notifications.          #
@@ -81,7 +81,8 @@ notify ()
 # I. DETERMINE SYSTEM'S PACKAGE MANAGER #
 # ------------------------------------- #
 
-echo "--- THESIS ---"
+# Require su-privileges for the program.
+sudo echo "--- THESIS ---"
 
 # Declare a system -> package manager associative array.
 declare -A PM_LOOKUP=(
@@ -139,20 +140,18 @@ declare -A PMIC=(
 PACKAGES_LEN=${#PACKAGES[@]}
 for (( i=0; i<$PACKAGES_LEN; i++ ));
 do
+    # Install package.
     eval "${PMIC[$PACKAGE_MANAGER]} ${PACKAGES[$i]}" &> /dev/null
-    which ${PACKAGES[$i]} &> /dev/null
     
-    if [ $? -eq 0 ];
-    then
-        notify success "${PACKAGES[$i]} \t($(( $i + 1 ))/$PACKAGES_LEN)" true
-    else
-        notify failure "${PACKAGES[$i]} \t($(( $i + 1 ))/$PACKAGES_LEN)" true
-        true
-    fi
-
+    # Check if installation was successful.
+    which ${PACKAGES[$i]} &> /dev/null
+    if [ $? -eq 0 ]; then type=success; else type=failure; fi
+    
+    # Notify success scenario.
+    notify $type "${PACKAGES[$i]} \t($(( $i + 1 ))/$PACKAGES_LEN)" true
 done
 
-# install pip packages.
+# Install pip packages.
 PIP_PACKAGES=(
     black       # Python code formatter.
     flake8      # Python code linter.
