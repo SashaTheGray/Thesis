@@ -32,8 +32,8 @@
 notify ()
 {
     # Parse arguments.
-    local type=$1
-    local message=$2
+    local type=${1:-""}
+    local message=${2:-""}
     local indent=${3:-false}
 
     # Colours.
