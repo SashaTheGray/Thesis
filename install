@@ -32,19 +32,72 @@
 # -----------------------------------###----------------------------------- #
 #                             TABLE OF CONTENTS                             #
 #                          -----------------------                          #
-#               ~.      Functions                                           #
+#               G.      Globals                                             #
+#               F.      Functions                                           #
 #               I.      Determening system's package manager                #
 #               II.     Install packages                                    #
 #               III.    Stow symlinks                                       #
 #               IV.     Setup zsh                                           #
+#                          -----------------------                          #
 # -----------------------------------###----------------------------------- #
 
-# ------------ #
-# ~. FUNCTIONS #
-# ------------ #
+
+                                # ---------- #
+                                # G. GLOBALS #
+                                # ---------- #
+
+# Determine package manager.
+PACKAGE_MANAGER="NONE"
+
+# Packages to be installed via the package manager.
+declare -a PKG_MGR_PACKAGES=(
+    git         # Version control system.
+    zsh         # Shell alternative.
+    tmux        # Terminal multiplexer.
+    stow        # Symlink farm.
+    bat         # A better cat command.
+    fzf         # Fuzzy finder.
+    unzip	    # Extraction tool.
+    nodejs      # Javascript runtime.
+    npm         # Node package manager.
+    cargo       # Rust package manager.
+)
+
+# Packages to be installed via pip.
+declare -a PIP_PACKAGES=(
+    black       # Python code formatter.
+    flake8      # Python code linter.
+    beautysh    # Bash code formatter.
+)
+
+# Packages to be installed via npm.
+declare -a NPM_PACKAGES=(
+    prettier    # Formatter -> https://www.npmjs.com/package/prettier
+)
+
+# Packages to be installed via cargo.
+declare -a CARGO_PACKAGES=(
+    stylua      # Lua code formatter.
+)
+
+# Declare a system -> package manager associative array.
+declare -A PM_LOOKUP=(
+    [/etc/debian_version]="apt"
+)
+
+# Declare a package manager -> install command associative array.
+declare -A PMIC=(
+    [apt]="sudo apt-get -y install"
+)
+
+
+                                # ------------ #
+                                # F. FUNCTIONS #
+                                # ------------ #
 
 ###################################################
-# Echo signed and colored notifications.          #
+# Echo signed and colored notifications           #
+# --------------------------------------          #
 #                                                 #
 # Arguments:                                      #
 #   type        -   operation | success | failure #
@@ -62,6 +115,7 @@ notify ()
     local blue="\033[0;34m"
     local green="\033[1;32m"
     local red="\033[0;31m"
+    local yellow="\033[0;33m"
     local no_color="\033[0m"
     
     # Config.
@@ -82,6 +136,14 @@ notify ()
             colour=$red
             sign="[-] "
         ;;
+        "warning")
+            colour=$red
+            sign="[!] "
+        ;;
+        "debug")
+            colour=$yellow
+            sign="[?] "
+        ;;
         *) 
             colour=$no_color
             sign=""
@@ -98,21 +160,84 @@ notify ()
     
 }
 
+########################################################
+# Install packages                                     #
+# -----------------                                    #
+#                                                      #
+# Arguments:                                           #
+#   package_manager -   Package manager to use         #
+#   packages        -   Array of packages to install   #
+#                                                      #
+# Globals:                                             #
+#   PMIC            -   Pkg mgr pkg install command    #
+########################################################
+install_packages ()
+{
+    # Parse arguments.
+    local pkg_mgr=${1:-"NONE"}
+    shift
+    local pkgs=($@)
 
-# ------------------------------------- #
-# I. DETERMINE SYSTEM'S PACKAGE MANAGER #
-# ------------------------------------- #
+    # Ensure that correct arguments are passed.
+    if [[ $pkgs = "NONE" ]] || [[ $pkg_mgr = "NONE" ]];
+    then
+        notify \
+            failure \
+            "Cannot install packages $pkg_mgr -> Arguments missing"
+        return 1
+    elif [[ -z ${#pkgs[@]} ]] || [[ -z $pkg_mgr ]]; 
+    then
+        notify \
+            failure \
+            "Cannot install $pkg_mgr packages -> Arguments can't be empty"
+        return 1
+    fi
+    
+    # Notify.
+    local len=${#pkgs[@]}
+    if [[ $len -eq 1 ]];
+    then
+        notify operation "Thesis is installing $len $pkg_mgr package"
+    else
+        notify operation "Thesis is installing $len $pkg_mgr packages"
+    fi
 
-# Require su-privileges for the program.
+    # Install packages.
+    for i in ${!pkgs[@]};
+    do
+        local package=${pkgs[i]}
+
+        # Install package.
+        eval "${PMIC[$pkg_mgr]} $package" &> /dev/null
+        
+        # Some packages have different names for commands.
+        if [[ $package = "bat" ]];
+        then
+            package="batcat"
+        fi
+
+        # Check if installation was successful.
+        $package --version &> /dev/null || \
+            $package -V &> /dev/null || \
+            $package version &> /dev/null || \
+            $package --help &> /dev/null || \
+            $package -hh &> /dev/null
+        if [ $? -eq 0 ]; then type=success; else type=failure; fi
+        
+        # Notify success scenario.
+        notify $type "${pkgs[$i]} \t($(( $i + 1 ))/$len)" true
+    done
+
+    return 0
+}
+
+
+                    # ------------------------------------- #
+                    # I. DETERMINE SYSTEM'S PACKAGE MANAGER #
+                    # ------------------------------------- #
+
+# Use sudo here to require su-privileges for the program.
 sudo echo "--- THESIS ---"
-
-# Declare a system -> package manager associative array.
-declare -A PM_LOOKUP=(
-    [/etc/debian_version]="apt"
-)
-
-# Determine package manager.
-PACKAGE_MANAGER="NONE"
 
 notify operation "Thesis is determining system's package manager"
 for file in ${!PM_LOOKUP[@]};
@@ -132,107 +257,49 @@ if [ $PACKAGE_MANAGER = "NONE" ]; then
     exit 1
 fi
 
-# -------------------- #
-# II. INSTALL PACKAGES #
-# -------------------- #
 
-PACKAGES=(
-    git         # Version control system.
-    zsh         # Shell alternative.
-    tmux        # Terminal multiplexer.
-    stow        # Symlink farm.
-    bat         # A better cat command.
-    fzf         # Fuzzy finder.
-    unzip	    # Extraction tool.
-    nodejs      # Javascript runtime.
-    npm         # Node package manager.
-    cargo       # Rust package manager.
-)
+                                # -------------------- #
+                                # II. INSTALL PACKAGES #
+                                # -------------------- #
 
-notify \
-    operation \
-    "Thesis is installing ${#PACKAGES[@]} $PACKAGE_MANAGER packages"
-
-# Associatice array for package manager installation commands.
-declare -A PMIC=(
-    [apt]="sudo apt-get -y install"
-)
-
-# Install packages.
-PACKAGES_LEN=${#PACKAGES[@]}
-for (( i=0; i<$PACKAGES_LEN; i++ ));
-do
-    # Install package.
-    eval "${PMIC[$PACKAGE_MANAGER]} ${PACKAGES[$i]}" &> /dev/null
-    
-    # Check if installation was successful.
-    which ${PACKAGES[$i]} &> /dev/null
-    if [ $? -eq 0 ]; then type=success; else type=failure; fi
-    
-    # Notify success scenario.
-    notify $type "${PACKAGES[$i]} \t($(( $i + 1 ))/$PACKAGES_LEN)" true
-done
+# Install package manager packages.
+install_packages $PACKAGE_MANAGER ${PKG_MGR_PACKAGES[@]}
 
 # Install pip packages.
-PIP_PACKAGES=(
-    black       # Python code formatter.
-    flake8      # Python code linter.
-    beautysh    # Bash code formatter.
-)
-
-echo "[*] Thesis is installing ${#PIP_PACKAGES[@]} pip packages ..."
-for package in ${PIP_PACKAGES[@]};
-do
-    echo "[*] Thesis is installing $package"
-    pip3 install $package &> /dev/null
-done
+install_packages pip ${PIP_PACKAGES[@]}
 
 # Install npm packages.
-NPM_PACKAGES=(
-    prettier
-)
-echo "[*] Thesis is installing ${#NPM_PACKAGES[@]} npm packages"
-
-for package in ${NPM_PACKAGES[@]};
-do
-    echo "[*] Thesis is installing $package"
-    npm install -g $package &> /dev/null
-done
+install_packages npm ${NPM_PACKAGES[@]}
 
 # Install cargo packages.
-CARGO_PACKAGES=(
-    stylua
-)
-echo "[*] Thesis is installing ${#CARGO_PACKAGES[@]} cargo packages"
-for package in ${CARGO_PACKAGES[@]};
-do
-    echo "[*] Thesis is installing $package"
-    cargo install $package &> /dev/null
-done
+install_packages cargo ${CARGO_PACKAGES[@]}
 
 # Install neovim.
 echo "[*] Thesis is installing neovim"
 
 # Set the appimage source and destination.
-NEOVIM_SOURCE="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
-IMAGE_DESTINATION=$HOME/.local/bin
-IMAGE_NAME=nvim
-IMAGE=$IMAGE_DESTINATION/$IMAGE_NAME
+NV_SRC="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
+IMG_DEST=$HOME/.local/bin
+IMG_NAME=nvim
+IMAGE=$IMG_DEST/$IMG_NAME
 
 # Download image and make it executeable.
-curl -s -L $NEOVIM_SOURCE > $IMAGE
+curl -s -L $NV_SRC > $IMAGE
 chmod u+x $IMAGE > /dev/null
 
 echo "[*] Thesis installed neovim"
 echo "[+] Thesis finished installing packages"
 
-# ------------------ #
-# III. STOW SYMLINKS #
-# ------------------ #
 
-# ------------- #
-# IV. SETUP ZSH #
-# ------------- #
+                                # ------------------ #
+                                # III. STOW SYMLINKS #
+                                # ------------------ #
+
+
+
+                                # ------------- #
+                                # IV. SETUP ZSH #
+                                # ------------- #
 
 echo "[*] Thesis is setting up ZSH"
 
