@@ -72,7 +72,8 @@ declare -a PIP_PACKAGES=(
 
 # Packages to be installed via npm.
 declare -a NPM_PACKAGES=(
-    prettier    # Formatter -> https://www.npmjs.com/package/prettier
+    prettier    # Formatter -> https://www.npmjs.com/package/prettier.
+    typescript  # Typescript compiler.
 )
 
 # Packages to be installed via cargo.
@@ -208,12 +209,15 @@ install_packages ()
         local package=${pkgs[i]}
 
         # Install package.
-        eval "${PMIC[$pkg_mgr]} $package" &> /dev/null
+        eval "sudo ${PMIC[$pkg_mgr]} $package" &> /dev/null
         
         # Some packages have different names for commands.
         if [[ $package = "bat" ]];
         then
             package="batcat"
+        elif [[ $package = "typescript" ]];
+        then
+            package="tsc"
         fi
 
         # Check if installation was successful.
