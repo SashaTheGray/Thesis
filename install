@@ -34,7 +34,7 @@
 #                          -----------------------                          #
 #               G.      Globals                                             #
 #               F.      Functions                                           #
-#               I.      Determening system's package manager                #
+#               I.      Determining system's package manager                #
 #               II.     Install packages                                    #
 #               III.    Stow symlinks                                       #
 #               IV.     Set ZSH as shell                                    #
