@@ -30,216 +30,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE                                 #
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                             #
 # -----------------------------------###----------------------------------- #
-#                             TABLE OF CONTENTS                             #
-#                          -----------------------                          #
-#               G.      Globals                                             #
-#               F.      Functions                                           #
-#               I.      Determining system's package manager                #
-#               II.     Install packages                                    #
-#               III.    Stow symlinks                                       #
-#               IV.     Set ZSH as shell                                    #
-#                          -----------------------                          #
-# -----------------------------------###----------------------------------- #
+
+source "./globals"
+source "./functions"
 
 
-                                # ---------- #
-                                # G. GLOBALS #
-                                # ---------- #
-
-# Determine package manager.
-PACKAGE_MANAGER="NONE"
-
-# Packages to be installed via the package manager.
-declare -a PKG_MGR_PACKAGES=(
-    git         # Version control system.
-    zsh         # Shell alternative.
-    tmux        # Terminal multiplexer.
-    stow        # Symlink farm.
-    bat         # A better cat command.
-    fzf         # Fuzzy finder.
-    unzip	    # Extraction tool.
-    npm         # Node package manager.
-    cargo       # Rust package manager.
-    shellcheck  # Bash linter.
-)
-
-# Packages to be installed via pip.
-declare -a PIP_PACKAGES=(
-    black       # Python code formatter.
-    flake8      # Python code linter.
-    beautysh    # Bash code formatter.
-)
-
-# Packages to be installed via npm.
-declare -a NPM_PACKAGES=(
-    prettier    # Formatter -> https://www.npmjs.com/package/prettier.
-    typescript  # Typescript compiler.
-)
-
-# Packages to be installed via cargo.
-declare -a CARGO_PACKAGES=(
-    stylua      # Lua code formatter.
-)
-
-# Declare a system -> package manager associative array.
-declare -A PM_LOOKUP=(
-    [/etc/debian_version]="apt"
-)
-
-# Declare a package manager -> install command associative array.
-declare -A PMIC=(
-    [apt]="sudo apt-get -y install"
-)
-
-
-                                # ------------ #
-                                # F. FUNCTIONS #
-                                # ------------ #
-
-###################################################
-# Echo signed and colored notifications           #
-# --------------------------------------          #
-#                                                 #
-# Arguments:                                      #
-#   type        -   operation | success | failure #
-#   message     -   message to echo               #
-#   indent      -   true | false -> default=false #
-###################################################
-notify ()
-{
-    # Parse arguments.
-    local type=${1:-""}
-    local message=${2:-""}
-    local indent=${3:-false}
-
-    # Colours.
-    local blue="\033[0;34m"
-    local green="\033[1;32m"
-    local red="\033[0;31m"
-    local yellow="\033[0;33m"
-    local no_color="\033[0m"
-    
-    # Config.
-    local colour="NONE"
-    local sign="NONE"
-    
-    # Deduce color and sign for the notification.
-    case "$type" in
-        "operation")
-            colour=$blue
-            sign="[*] "
-        ;;
-        "success") 
-            colour=$green
-            sign="[+] "
-        ;;
-        "failure") 
-            colour=$red
-            sign="[-] "
-        ;;
-        "warning")
-            colour=$red
-            sign="[!] "
-        ;;
-        "debug")
-            colour=$yellow
-            sign="[?] "
-        ;;
-        *) 
-            colour=$no_color
-            sign=""
-        ;;
-    esac
-    
-    # Echo notification.
-    if [ "$indent" = true ];
-    then
-        echo -e "\t$colour$sign$message$no_color"
-    else
-        echo -e "$colour$sign$message$no_color"
-    fi
-    
-}
-
-########################################################
-# Install packages                                     #
-# -----------------                                    #
-#                                                      #
-# Arguments:                                           #
-#   package_manager -   Package manager to use         #
-#   packages        -   Array of packages to install   #
-#                                                      #
-# Globals:                                             #
-#   PMIC            -   Pkg mgr pkg install command    #
-########################################################
-install_packages ()
-{
-    # Parse arguments.
-    local pkg_mgr=${1:-"NONE"}
-    shift
-    local pkgs=("$@")
-
-    # Ensure that correct arguments are passed.
-    if [[ ${pkgs[*]} = "NONE" ]] || [[ $pkg_mgr = "NONE" ]];
-    then
-        notify \
-            failure \
-            "Cannot install packages $pkg_mgr -> Arguments missing"
-        return 1
-    elif [[ -z ${#pkgs[@]} ]] || [[ -z $pkg_mgr ]]; 
-    then
-        notify \
-            failure \
-            "Cannot install $pkg_mgr packages -> Arguments can't be empty"
-        return 1
-    fi
-    
-    # Notify.
-    local len=${#pkgs[@]}
-    if [[ $len -eq 1 ]];
-    then
-        notify operation "Thesis is installing $len $pkg_mgr package"
-    else
-        notify operation "Thesis is installing $len $pkg_mgr packages"
-    fi
-
-    # Install packages.
-    for i in "${!pkgs[@]}";
-    do
-        local package=${pkgs[i]}
-
-        # Install package.
-        eval "sudo ${PMIC[$pkg_mgr]} $package" &> /dev/null
-        
-        # Some packages have different names for commands.
-        if [[ $package = "bat" ]];
-        then
-            package="batcat"
-        elif [[ $package = "typescript" ]];
-        then
-            package="tsc"
-        fi
-
-        # Check if installation was successful.
-        local command
-        command="$package --version &> /dev/null || \
-            $package -V &> /dev/null || \
-            $package version &> /dev/null || \
-            $package --help &> /dev/null || \
-            $package -hh &> /dev/null)"
-        if [ "$command" ]; then type=success; else type=failure; fi
-        
-        # Notify success scenario.
-        notify $type "${pkgs[$i]} \t($(( "$i" + 1 ))/$len)" true
-    done
-
-    return 0
-}
-
-
-                    # ------------------------------------- #
-                    # I. DETERMINE SYSTEM'S PACKAGE MANAGER #
-                    # ------------------------------------- #
+# ------------------------------------- #
+# I. DETERMINE SYSTEM'S PACKAGE MANAGER #
+# ------------------------------------- #
 
 # Use sudo here to require su-privileges for the program.
 sudo clear
@@ -264,9 +62,9 @@ if [ "$PACKAGE_MANAGER" = "NONE" ]; then
 fi
 
 
-                                # -------------------- #
-                                # II. INSTALL PACKAGES #
-                                # -------------------- #
+# -------------------- #
+# II. INSTALL PACKAGES #
+# -------------------- #
 
 # Install package manager packages.
 install_packages "$PACKAGE_MANAGER" "${PKG_MGR_PACKAGES[@]}"
@@ -309,16 +107,15 @@ install_packages npm "${NPM_PACKAGES[@]}"
 install_packages cargo "${CARGO_PACKAGES[@]}"
 
 
-
-                                # ------------------ #
-                                # III. STOW SYMLINKS #
-                                # ------------------ #
-
+# ------------------ #
+# III. STOW SYMLINKS #
+# ------------------ #
 
 
-                                # -------------------- #
-                                # IV. SET ZSH AS SHELL #
-                                # -------------------- #
+
+# -------------------- #
+# IV. SET ZSH AS SHELL #
+# -------------------- #
 
 if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     
