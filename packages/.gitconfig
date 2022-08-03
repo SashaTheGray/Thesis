@@ -1,18 +1,16 @@
 # This file contains git configurations.
 
 [color]
-
     # Enable terminal color support.
     ui = auto
 
 [alias]
-
     # Compact git status.
     st = status -sb
 
     # Checkout.
     co = checkout
-
+    
     # Create and checkout a new branch.
     birth = checkout -b
 
@@ -23,7 +21,7 @@
     br = branch --format="%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]" --sort=-committerdate
     
     # Custom git log.
-	lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %C(yellow italic)%s%Creset %C(dim green) %cr %C(brightcyan bold)%an\" --abbrev-commit
+    lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %C(yellow italic)%s%Creset\n%C(dim green)%cr %C(brightcyan bold)by %an\n\" --abbrev-commit
 
     # Commit.
     ci = "commit"
@@ -46,12 +44,14 @@
 [user]
 	name = SashaTheGray
 	email = contact-sasha@proton.me
-[pull]
 
+[pull]
     # Use rebase instead of merge when pulling.
 	rebase = true
+
 [core]
 	editor = vim
 	excludesfile = /home/sasha/.gitignore_global
+
 [commit]
 	template = /home/sasha/.gitmessage.txt
