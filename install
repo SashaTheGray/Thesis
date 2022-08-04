@@ -268,6 +268,7 @@ SOURCE_DOMAIN="https://github.com"
 SOURCE_DIR="/neovim/neovim/releases/latest/download/nvim.appimage"
 NEOVIM_SOURCE="$SOURCE_DOMAIN$SOURCE_DIR"
 NEOVIM_IMAGE=$HOME/.local/bin/nvim
+mkdir -p "$HOME"/.local/bin/nvim
 curl -s -L $NEOVIM_SOURCE > "$NEOVIM_IMAGE"
 chmod u+x "$NEOVIM_IMAGE" > /dev/null
 command -v nvim &> /dev/null
