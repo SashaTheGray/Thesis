@@ -201,12 +201,9 @@ install_packages ()
 
     # Notify.
     local len=${#pkgs[@]}
-    if [[ $len -eq 1 ]];
-    then
-        notify operation "Thesis is installing $len $pkg_mgr package"
-    else
-        notify operation "Thesis is installing $len $pkg_mgr packages"
-    fi
+    local noun
+    if [[ $len -eq 1 ]]; then noun="package"; else noun="packages"; fi
+    notify operation "Thesis is installing $len $pkg_mgr $noun"
 
     # Install packages.
     for i in "${!pkgs[@]}";
