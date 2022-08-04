@@ -6,4 +6,4 @@ echo "[*] Loading zsh configurations"
 source $ZDOTDIR/.antigen
 source $ZDOTDIR/.aliases
 
-echo "--- ZSH configured ---"
+echo "--- ZSH CONFIGURATIONS END ---"

@@ -30,10 +30,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE                                 #
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                             #
 # -----------------------------------###----------------------------------- #
+#                             TABLE OF CONTENTS                             #
+# -----------------------------------###----------------------------------- #
+#                                                                           #
+#               I.      GLOBALS                                             #
+#               II.     FUNCTIONS                                           #
+#               III.    DETERMINE SYSTEM PACKAGE MANAGER                    #
+#               IV.     INSTALL PACKAGES                                    #
+#               V.      STOW SYMLINKS                                       #
+#               VI.     SET ZSH AS SHELL                                    #
+#                                                                           #
+# -----------------------------------###----------------------------------- #
+
+
+
 
 
 # ---------- #
-# G. GLOBALS #
+# I. GLOBALS #
 # ---------- #
 
 # System package manager.
@@ -82,9 +96,9 @@ declare -A PMIC=(
 )
 
 
-# ------------ #
-# F. FUNCTIONS #
-# ------------ #
+# ------------- #
+# II. FUNCTIONS #
+# ------------- #
 
 ###################################################
 # Echo signed and colored notifications           #
@@ -228,12 +242,11 @@ install_packages ()
 
 
 # ------------------------------------- #
-# I. DETERMINE SYSTEM'S PACKAGE MANAGER #
+# III. DETERMINE SYSTEM PACKAGE MANAGER #
 # ------------------------------------- #
 
 # Use sudo here to require su-privileges for the program.
-sudo clear
-echo "--- THESIS ---"
+echo "--- THESIS START ---"
 
 notify operation "Thesis is determining system's package manager"
 for file in "${!PM_LOOKUP[@]}";
@@ -256,7 +269,7 @@ fi
 
 
 # -------------------- #
-# II. INSTALL PACKAGES #
+# IV. INSTALL PACKAGES #
 # -------------------- #
 
 # Install package manager packages.
@@ -301,9 +314,9 @@ install_packages npm "${NPM_PACKAGES[@]}"
 install_packages cargo "${CARGO_PACKAGES[@]}"
 
 
-# ------------------ #
-# III. STOW SYMLINKS #
-# ------------------ #
+# ---------------- #
+# V. STOW SYMLINKS #
+# ---------------- #
 
 notify operation "Thesis is stowing symlinks"
 command="cd $HOME/.config/thesis/packages/ && \
@@ -316,7 +329,7 @@ then
 fi
 
 # -------------------- #
-# IV. SET ZSH AS SHELL #
+# VI. SET ZSH AS SHELL #
 # -------------------- #
 
 if [ "$SHELL" != "/usr/bin/zsh" ] ; then
@@ -334,4 +347,4 @@ if [ "$SHELL" != "/usr/bin/zsh" ] ; then
     notify debug "Please run 'source $HOME/.zshenv' to finish setup"
 fi
 
-echo "--- THESIS ---"
+echo "--- THESIS END ---"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "--- Configuring ZSH ---"
+echo "--- ZSH CONFIGURATION START ---"
 echo "[*] Loading zsh environment variables"
 
 export PATH=$PATH:$HOME/.local/bin
