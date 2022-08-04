@@ -23,7 +23,8 @@ local OPTIONS = {
     termguicolors = true,           -- Enable termgui colors.
     textwidth = 79,                 -- Maximum line length.
     colorcolumn = {80},             -- Set a linelength guide.
-    updatetime = 500 		        -- Set autocompletion time.	
+    updatetime = 500, 		        -- Set autocompletion time.	
+    modifiable = true               -- Set buffers as modifiable.
 }
 
 for option, value in pairs(OPTIONS) do
