@@ -93,6 +93,7 @@ declare -A PM_LOOKUP=(
 # Declare a package manager -> install command associative array.
 declare -A PMIC=(
     [apt]="sudo apt-get -y install"
+    [nala]="sudo nala -y install"
 )
 
 
@@ -246,7 +247,7 @@ install_packages ()
 # ------------------------------------- #
 
 # Use sudo here to require su-privileges for the program.
-echo "--- THESIS START ---"
+sudo echo "--- THESIS START ---"
 
 notify operation "Thesis is determining system's package manager"
 for file in "${!PM_LOOKUP[@]}";
@@ -267,6 +268,14 @@ if [ "$PACKAGE_MANAGER" = "NONE" ]; then
     exit 1
 fi
 
+# Set up Nala package manager instead of apt if available.
+if command -v nala &> /dev/null && [ "$PACKAGE_MANAGER" = "apt" ];
+then
+    PACKAGE_MANAGER="nala"
+    notify success "Using nala instead of apt" true
+fi
+
+
 
 # -------------------- #
 # IV. INSTALL PACKAGES #
@@ -281,7 +290,7 @@ SOURCE_DOMAIN="https://github.com"
 SOURCE_DIR="/neovim/neovim/releases/latest/download/nvim.appimage"
 NEOVIM_SOURCE="$SOURCE_DOMAIN$SOURCE_DIR"
 NEOVIM_IMAGE=$HOME/.local/bin/nvim
-mkdir -p "$HOME"/.local/bin/nvim
+mkdir -p "$HOME"/.local/bin/ &> /dev/null
 curl -s -L $NEOVIM_SOURCE > "$NEOVIM_IMAGE"
 chmod u+x "$NEOVIM_IMAGE" > /dev/null
 command -v nvim &> /dev/null
