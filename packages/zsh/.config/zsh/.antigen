@@ -1,0 +1,23 @@
+# This file contains Antigen configurations.
+
+###########
+# ANTIGEN #
+###########
+
+echo "[*] Loading zsh antigen"
+
+# Find plugins here.
+# https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins
+
+source $ADOTDIR/antigen.zsh
+
+# Load the oh-my-zsh library.
+antigen use oh-my-zsh
+
+# Load plugins.
+antigen bundle colored-man-pages
+antigen bundle command-not-found
+antigen bundle carloscuesta/materialshell
+
+# Apply configurations.
+antigen apply

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+echo "[*] Loading zsh aliases"
+
+# Programs.
+alias nv="nvim"
+alias py="python3"
+alias pip="pip3"
+alias nf="neofetch"
+alias ll="ls -skAlFh --author --group-directories-first"
+alias cl="clear"
+alias cat="batcat"
+alias nf="neofetch"
+
+# Navigation.
+alias scripts="cd ~/.local/bin && clear && ll"
+alias dev="cd ~/dev && clear && ll"
+alias work="cd ~/work && clear && ll"
+alias nvc="nvim ~/.config/nvim"
+alias zshc="cd $ZDOTDIR && clear && tree -a"
+alias ~="cd $HOME"
+
+# Config files.
+alias zsha="$EDITOR $ZDOTDIR/.aliases"
+alias zshag="$EDITOR $ZDOTDIR/.antigen"
