@@ -50,6 +50,9 @@
 # I. GLOBALS #
 # ---------- #
 
+# Log files.
+ERRORS="$HOME/.config/thesis/installer/errors.log"
+
 # System package manager.
 PACKAGE_MANAGER="NONE"
 
@@ -62,7 +65,7 @@ declare -a PKG_MGR_PACKAGES=(
     bat         # A better cat command.
     fzf         # Fuzzy finder.
     unzip	    # Extraction tool.
-    npm         # Node package manager.
+    nodejs      # Javascript runtime.
     cargo       # Rust package manager.
     shellcheck  # Bash linter.
 )
@@ -92,8 +95,8 @@ declare -A PM_LOOKUP=(
 
 # Declare a package manager -> install command associative array.
 declare -A PMIC=(
-    [apt]="sudo apt-get -y install"
-    [nala]="sudo nala -y install"
+    [apt]="apt -y install"
+    [nala]="nala -y install"
 )
 
 
@@ -122,6 +125,7 @@ notify ()
     local green="\033[1;32m"
     local red="\033[0;31m"
     local yellow="\033[0;33m"
+    local purple="\033[0;35m"
     local no_color="\033[0m"
 
     # Config.
@@ -149,6 +153,10 @@ notify ()
         "debug")
             colour=$yellow
             sign="[?] "
+            ;;
+        "info")
+            colour=$purple
+            sign="[i] "
             ;;
         *)
             colour=$no_color
@@ -211,7 +219,7 @@ install_packages ()
         local package=${pkgs[i]}
 
         # Install package.
-        eval "sudo ${PMIC[$pkg_mgr]} $package" &> /dev/null
+        "${PMIC[$pkg_mgr]}" "$package" 2> "$ERRORS"
 
         # Some packages have different names for commands.
         if [[ $package = "bat" ]];
@@ -244,6 +252,7 @@ install_packages ()
 # ------------------------------------- #
 
 # Use sudo here to require su-privileges for the program.
+clear
 sudo echo "--- THESIS START ---"
 
 notify operation "Thesis is determining system's package manager"
@@ -269,7 +278,7 @@ fi
 if command -v nala &> /dev/null && [ "$PACKAGE_MANAGER" = "apt" ];
 then
     PACKAGE_MANAGER="nala"
-    notify success "Using nala instead of apt" true
+    notify info "Using nala instead of apt" true
 fi
 
 
@@ -278,9 +287,6 @@ fi
 # IV. INSTALL PACKAGES #
 # -------------------- #
 
-# Install package manager packages.
-install_packages "$PACKAGE_MANAGER" "${PKG_MGR_PACKAGES[@]}"
-
 # Install neovim from appimage.
 notify operation "Thesis is installing Neovim from appimage"
 SOURCE_DOMAIN="https://github.com"
@@ -288,27 +294,21 @@ SOURCE_DIR="/neovim/neovim/releases/latest/download/nvim.appimage"
 NEOVIM_SOURCE="$SOURCE_DOMAIN$SOURCE_DIR"
 NEOVIM_IMAGE=$HOME/.local/bin/nvim
 mkdir -p "$HOME"/.local/bin/ &> /dev/null
-curl -s -L $NEOVIM_SOURCE > "$NEOVIM_IMAGE"
-chmod u+x "$NEOVIM_IMAGE" > /dev/null
-command -v nvim &> /dev/null
-if [ "$?" ]
+
+if curl -sL $NEOVIM_SOURCE -o "$NEOVIM_IMAGE" 2> "$ERRORS";
 then
+    chmod u+x "$NEOVIM_IMAGE"
+    command -v nvim &> /dev/null
     notify success "Thesis installed Neovim" true
 else
     notify failure "Thesis failed to install Neovim" true
 fi
 
-# Install nodejs from source.
-notify operation "Thesis is installing Nodejs from source"
-curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash - &> /dev/null
-sudo apt install nodejs &> /dev/null
-command -v &> /dev/null
-if [ "$?" ]
-then
-    notify success "Thesis installed Nodejs" true
-else
-    notify failure "Thesis failed to install Nodejs" true
-fi
+# Add nodejs source.
+curl -sL https://deb.nodesource.com/setup_18.x | sudo bash &> /dev/null
+
+# Install package manager packages.
+install_packages "$PACKAGE_MANAGER" "${PKG_MGR_PACKAGES[@]}"
 
 # Install pip packages.
 install_packages pip "${PIP_PACKAGES[@]}"
