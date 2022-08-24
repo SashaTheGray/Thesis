@@ -16,6 +16,7 @@ require("plugin_config.nvimtree")
 require("plugin_config.bufferline")
 require("plugin_config.toggleterm")
 require("plugin_config.dashboard")
+require("plugin_config.glow")
 
 -- Register general config.
 require("options")

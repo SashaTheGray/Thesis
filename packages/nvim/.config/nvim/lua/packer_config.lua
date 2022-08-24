@@ -107,6 +107,9 @@ return packer.startup(
         -- Dashboard.
         register({"glepnir/dashboard-nvim"})
 
+        -- Markdown preview.
+        register({"ellisonleao/glow.nvim"})
+
         -- Sync Packer if it was just installed.
         if PACKER_GOT_INSTALLED then
             packer.sync()

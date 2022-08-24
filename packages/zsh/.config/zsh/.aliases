@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "[*] Loading zsh aliases"
-
 # Programs.
 alias nv="nvim"
 alias py="python3"

@@ -4,8 +4,6 @@
 # ANTIGEN #
 ###########
 
-echo "[*] Loading zsh antigen"
-
 # Find plugins here.
 # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins
 
