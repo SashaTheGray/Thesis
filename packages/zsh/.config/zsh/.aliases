@@ -11,6 +11,7 @@ alias ll="ls -skAlFh --author --group-directories-first"
 alias cl="clear"
 alias cat="batcat"
 alias nf="neofetch"
+alias sockets="ss -lntu"
 
 # Navigation.
 alias scripts="cd ~/.local/bin && clear && ll"
