@@ -18,6 +18,7 @@ alias work="cd ~/work && clear && ll"
 alias nvc="nvim ~/.config/nvim"
 alias zshc="cd $ZDOTDIR && clear && tree -a"
 alias ~="cd $HOME"
+alias thesis="cd ~/.config/thesis/ && clear && ll"
 
 # Config files.
 alias zsha="$EDITOR $ZDOTDIR/.aliases"
