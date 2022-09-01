@@ -22,11 +22,7 @@ todo_comments.setup({
 		PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
 		NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
 	},
-	merge_keywords = true, -- when true, custom keywords will be merged with the defaults
-	-- highlighting of the line containing the todo comment
-	-- * before: highlights before the keyword (typically comment characters)
-	-- * keyword: highlights of the keyword
-	-- * after: highlights after the keyword (todo text)
+	merge_keywords = true, -- merge custom keywords with default keywords.
 	highlight = {
 		before = "", -- "fg" or "bg" or empty
 		keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
@@ -46,7 +42,7 @@ todo_comments.setup({
 		default = { "Identifier", "#7C3AED" },
 	},
 	search = {
-		command = "rg",
+		command = "rgrep",
 		args = {
 			"--color=never",
 			"--no-heading",

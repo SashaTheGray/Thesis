@@ -68,6 +68,7 @@ declare -ar PKG_MGR_PACKAGES=(
     nodejs      # Javascript runtime.
     cargo       # Rust package manager.
     shellcheck  # Bash linter.
+    ripgrep     # Recursive search tool.
 )
 
 # Packages to be installed via pip.
