@@ -17,6 +17,7 @@ require("plugin_config.bufferline")
 require("plugin_config.toggleterm")
 require("plugin_config.dashboard")
 require("plugin_config.glow")
+require("plugin_config.todo_comments")
 
 -- Register general config.
 require("options")

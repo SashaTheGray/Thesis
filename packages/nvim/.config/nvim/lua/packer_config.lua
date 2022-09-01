@@ -110,6 +110,9 @@ return packer.startup(
         -- Markdown preview.
         register({"ellisonleao/glow.nvim"})
 
+        -- Task comments.
+        register({"folke/todo-comments.nvim"})
+
         -- Sync Packer if it was just installed.
         if PACKER_GOT_INSTALLED then
             packer.sync()
