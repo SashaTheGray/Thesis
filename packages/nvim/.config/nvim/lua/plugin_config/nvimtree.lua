@@ -99,7 +99,8 @@ require("nvim-tree").setup {
             "Cargo.toml",
             "Makefile",
             "README.md",
-            "readme.md"
+            "readme.md",
+            "pyproject.toml"
         },
         symlink_destination = true,
     },
@@ -118,8 +119,8 @@ require("nvim-tree").setup {
         args = {},
     },
     diagnostics = {
-        enable = false,
-        show_on_dirs = false,
+        enable = true,
+        show_on_dirs = true,
         debounce_delay = 50,
         icons = {
             hint = "",
@@ -129,7 +130,7 @@ require("nvim-tree").setup {
         },
     },
     filters = {
-        dotfiles = false,
+        dotfiles = true,
         custom = {},
         exclude = {},
     },
