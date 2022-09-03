@@ -12,6 +12,7 @@ local diagnostics = null_ls.builtins.diagnostics
 null_ls.setup({
 	debug = false,
 	sources = {
+		-- Formatters.
 		formatting.prettier.with({
 			extra_args = {
 				"--no-semi",
@@ -19,17 +20,23 @@ null_ls.setup({
 				"--jsx-double-quote",
 			},
 		}),
-
-		formatting.black.with({
-			extra_args = {
-				"--fast",
-				"--line-length 79",
-			},
-		}),
-
+		formatting.autopep8.with({ 
+            extra_args = {
+                "-max-line-length 79",
+                "--jobs -1",  -- Match CPU count of parallel jobs.
+            } 
+        }),
 		formatting.stylua,
 		formatting.beautysh,
+
+		-- Linters.
+		diagnostics.flake8.with({
+			extra_args = {
+				"--doctests",
+				"--max-line-length 79",
+				"--max-doc-length 72",
+			},
+		}),
 		diagnostics.shellcheck,
-		diagnostics.flake8,
 	},
 })
