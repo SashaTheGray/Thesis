@@ -73,8 +73,8 @@ declare -ar PKG_MGR_PACKAGES=(
 
 # Packages to be installed via pip.
 declare -ar PIP_PACKAGES=(
-    black       # Python code formatter.
     flake8      # Python code linter.
+    autopep8    # Python formatter.
     beautysh    # Bash code formatter.
 )
 
