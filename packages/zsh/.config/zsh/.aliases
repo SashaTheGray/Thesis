@@ -3,7 +3,7 @@
 # Programs.
 alias nv="nvim"
 alias py="python3.10"
-alias pip="pip3"
+alias pip="pip3.10"
 alias nf="neofetch"
 alias ll="ls -skAlFh --author --group-directories-first"
 alias cl="clear"
