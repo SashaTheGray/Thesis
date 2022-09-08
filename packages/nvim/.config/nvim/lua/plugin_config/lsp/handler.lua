@@ -84,11 +84,14 @@ local function lsp_keymap(bufnr)
 
 	-- Show problems with line.
 	-- "give line-diagnostics"
-	map(bufnr, mode, "gl", "<cmd> lua vim.diagnostic.open_float()<CR>", opts)
+	map(bufnr, mode, "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 
 	-- Format the buffer using the attached language server clients.
 	-- "format file"
 	map(bufnr, mode, "ff", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", opts)
+
+	-- Rename the definition under the cursor.
+	map(bufnr, mode, "gR", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 end
 
 HANDLER.on_attach = function(client, bufnr)
