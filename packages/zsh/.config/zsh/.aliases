@@ -6,10 +6,9 @@ alias py="python3.10"
 alias pip="pip3.10"
 alias nf="neofetch"
 alias ll="ls -skAlFh --author --group-directories-first"
-alias cl="clear"
 alias cat="batcat"
 alias nf="neofetch"
-alias sockets="ss -lntu"
+alias sockets="ss -lntudw"
 
 # Navigation.
 alias scripts="cd ~/.local/bin && clear && ll"

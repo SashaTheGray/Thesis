@@ -30,40 +30,40 @@ local number_of_plugins = vim.fn.len(vim.fn.globpath("$HOME/.local/share/nvim/si
 -- Set layout.
 dashboard.custom_header = HEADER
 dashboard.custom_center = {
-    -- Create a new script.
-    {
-        icon = " ",
-        desc = "Create a new file           ",
-        action = "DashboardNewFile",
-        shortcut = "SPC n"
-    },
+	-- Create a new script.
+	{
+		icon = " ",
+		desc = "Create a new file           ",
+		action = "DashboardNewFile",
+		shortcut = "SPC n",
+	},
 
-    -- Find a file
-    {
-        icon = " ",
-        desc = "Find a file                 ",
-        action = "Telescope find_files",
-        shortcut = "SPC f"
-    },
+	-- Find a file.
+	{
+		icon = " ",
+		desc = "Find a file                 ",
+		action = "Telescope find_files",
+		shortcut = "SPC f",
+	},
 
-    -- 
-    {
-        icon = " ",
-        desc = "History                     ",
-        action = "Telescope oldfiles",
-        shortcut = "SPC h"
-    },
+	-- Telescope histroy.
+	{
+		icon = " ",
+		desc = "History                     ",
+		action = "Telescope oldfiles",
+		shortcut = "SPC h",
+	},
 
-    --
-    {
-        icon = "漣 ",
-        desc = "NeoVim config              ",
-        action = "edit $HOME/.config/nvim/init.lua",
-        shortcut = "SPC c"
-    },
+	-- NeoVim config.
+	{
+		icon = "漣 ",
+		desc = "NeoVim config              ",
+		action = "edit $HOME/.config/nvim/init.lua",
+		shortcut = "SPC c",
+	},
 }
 dashboard.custom_footer = {
-    "煉 NeoVim loaded with " .. number_of_plugins .. " plugins 煉 "
+	"煉 NeoVim loaded with " .. number_of_plugins .. " plugins 煉 ",
 }
 
 -- Set options.

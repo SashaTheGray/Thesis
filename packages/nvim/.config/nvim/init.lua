@@ -23,6 +23,3 @@ require("plugin_config.todo_comments")
 require("options")
 require("keymap")
 
--- Set colorscheme.
-vim.cmd("colorscheme material")
-vim.g.material_style = "deep ocean"

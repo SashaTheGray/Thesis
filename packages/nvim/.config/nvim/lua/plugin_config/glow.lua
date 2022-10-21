@@ -4,11 +4,7 @@ if not fetched then
 	print("[-] Could not fetch Glow -> " .. glow)
 end
 
---[[ return glow.setup({ ]]
---[[ 	glow_path = "", ]]
---[[ 	glow_install_path = "~/.local/bin", ]]
---[[ 	border = "shadow", ]]
---[[ 	style = "dark", ]]
---[[ 	pager = false, ]]
---[[ 	width = 80, ]]
---[[ }) ]]
+return glow.setup({
+	pager = true,
+	width = 150,
+})

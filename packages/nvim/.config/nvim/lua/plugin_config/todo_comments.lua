@@ -1,5 +1,26 @@
 -- https://github.com/folke/todo-comments.nvim
 
+-- Below are examples of currently implemented 'todo-comments'.
+
+-- INFO: Some information here.
+-- NOTE: This is a note.
+
+-- PERFORMANCE: This is very perfomance instensive.
+-- OPTIMIZE: This should be optimized.
+
+-- TODO: Design an algorithm that solves A, B, and C.
+-- FINISH: Finish this please!
+
+-- ISSUE: number 294 -- see <Github link>.
+-- BUG: There is a bug here!
+-- FIX: This needs fixing!
+-- IMPLEMENT: This function should do A, B, and C.
+
+-- ATTENTION: I like attention!
+-- HACKING: This injects A into B.
+
+-- WARNING: !!!!!
+
 local status_ok, todo_comments = pcall(require, "todo-comments")
 if not status_ok then
 	print("[-] Cannot load todo-comments -> " .. todo_comments)
@@ -8,19 +29,13 @@ end
 todo_comments.setup({
 	signs = true, -- show icons in the signs column
 	sign_priority = 8, -- sign priority
-	-- keywords recognized as todo comments
 	keywords = {
-		FIX = {
-			icon = " ", -- icon used for the sign, and in search results
-			color = "error", -- can be a hex color, or a named color (see below)
-			alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-			-- signs = false, -- configure signs for some keywords individually
-		},
-		TODO = { icon = " ", color = "info" },
-		HACK = { icon = " ", color = "warning" },
-		WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-		PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-		NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+		FIX = { icon = " ", color = "error", alt = { "BUG", "ISSUE", "IMPLEMENT" } },
+		TODO = { icon = " ", color = "hint", alt = { "FINISH" } },
+		HACKING = { icon = " ", color = "warning", alt = { "ATTENTION" } },
+		WARNING = { icon = " ", color = "warning" },
+		PERFORMANCE = { icon = " ", alt = { "OPTIMIZE" } },
+		NOTE = { icon = " ", color = "info", alt = { "INFO" } },
 	},
 	merge_keywords = true, -- merge custom keywords with default keywords.
 	highlight = {
@@ -32,27 +47,21 @@ todo_comments.setup({
 		max_line_len = 400, -- ignore lines longer than this
 		exclude = {}, -- list of file types to exclude highlighting
 	},
-	-- list of named colors where we try to extract the guifg from the
-	-- list of hilight groups or use the hex color if hl not found as a fallback
 	colors = {
-		error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-		warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
-		info = { "DiagnosticInfo", "#2563EB" },
-		hint = { "DiagnosticHint", "#10B981" },
+		error = { "#FF5370" },
+		warning = { "#FFD740" },
+		info = { "#89DDFF" },
+		hint = { "#C3E88D" },
 		default = { "Identifier", "#7C3AED" },
 	},
+	-- FIX: This is currently broken, dependency conflicts related to ripgrep.
 	search = {
 		command = "rgrep",
 		args = {
 			"--color=never",
-			"--no-heading",
 			"--with-filename",
 			"--line-number",
-			"--column",
 		},
-		-- regex that will be used to match keywords.
-		-- don't replace the (KEYWORDS) placeholder
 		pattern = [[\b(KEYWORDS):]], -- ripgrep regex
-		-- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
 	},
 })

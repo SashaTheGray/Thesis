@@ -2,7 +2,7 @@
 -- https://neovim.io/doc/user/options.html
 
 local OPTIONS = {
-    clipboard = "unnamedplus",      -- Share system clipboard.
+    clipboard = "unnamed",          -- Share system clipboard.
     conceallevel = 0,               -- Text is shown normally.
     fileencoding = "utf-8",         -- File encoding.
     ignorecase = true,              -- Ignore case when searching.
